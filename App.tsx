@@ -73,7 +73,7 @@ const moveTo = async(position: LatLng) => {
   }
 };
 
-const edgePaddingValue = 75;
+const edgePaddingValue = 90;
 
 const edgePadding = {
   top: edgePaddingValue,
@@ -170,24 +170,27 @@ const styles = StyleSheet.create({
   searchContainer: {
     position: "absolute",
     width: "90%",
-    backgroundColor: "white",
+    backgroundColor: "#EEE",
     shadowColor: "Black",
     shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.6,
+    shadowOpacity: 0.9,
     shadowRadius: 5,   //android
     elevation: 5,     // ios
-    padding: 5,
+    padding: 4,
     borderRadius: 7,
     top: Constants.statusBarHeight,
+    marginHorizontal: 20,
   },
   input: {
-    borderColor: "#888",
+    borderColor: "#DDD",
     borderWidth: 1,
   },
   button: {
     backgroundColor: "#bbb",
-    paddingVertical: 13,
-    marginTop: 10,
+    paddingVertical: 15,
+    marginLeft: 45,
+    marginRight: 45,
+    marginTop: 15,
     borderRadius: 7,
   },
   buttonText: {
