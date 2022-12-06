@@ -1,12 +1,15 @@
 
 import React, { useRef, useState } from 'react';
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, Touchable, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, Touchable, TouchableOpacity, FlatList, Button } from 'react-native';
 import { GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { GOOGLE_API_KEY } from './environments';
+import { GOOGLE_API_KEY, places } from './environments';
+import { placeTypes } from './environments'
 import Constants from "expo-constants";
 //import { useRef, useState } from "react";
 import MapViewDirections from 'react-native-maps-directions';
+import { StatusBar } from 'expo-status-bar';
+
 
 
 // https://docs.expo.dev/versions/latest/sdk/map-view/
@@ -57,15 +60,16 @@ function InputAutocomplete({
 }
 
 export default function App() {
-const [origin, setOrigin] = useState<LatLng | null>()
-const [destination, setDestination] = useState<LatLng | null>()
-const [showDirections, setShowDirections] = useState(false)
-const [ distance, setDistance] = useState(0);
-const [duration, setDuration] = useState(0);
-const mapRef = useRef<MapView>(null);
+  
+  const [origin, setOrigin] = useState<LatLng | null>()
+  const [destination, setDestination] = useState<LatLng | null>()
+  const [showDirections, setShowDirections] = useState(false)
+  const [ distance, setDistance] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const mapRef = useRef<MapView>(null);
 
-// to move the camera to place selected
-const moveTo = async(position: LatLng) => {
+  // to move the camera to place selected
+  const moveTo = async(position: LatLng) => {
   const camera = await mapRef.current?.getCamera()
   if (camera){
     camera.center = position;
@@ -108,50 +112,72 @@ const onPlaceSelected = (
     set (position);
     moveTo(position);
 };
+
+// const Place = ({place}) => {
+//   return(
+//     <View style={{
+//       padding: 8,
+//     }}>
+//       <Text key={place.id}>{place.name}</Text>
+//       <Button title="Click me" />
+//     </View>
+//   )
+// }
+
+
 return (
     <View style={styles.container}>
-      <MapView
-      ref={mapRef}
-       style={styles.map} 
-       provider={PROVIDER_GOOGLE} 
-       initialRegion={INITIAL_POSITION} 
-       >
-        {origin && <Marker coordinate={origin} /> }
-        {destination && <Marker coordinate={destination} />}
-        {showDirections && origin && destination && (
-        <MapViewDirections
-        origin={origin}
-        destination={destination}
-        apikey={GOOGLE_API_KEY}
-        strokeColor="#6cf542"
-        strokeWidth={5}
-        onReady={traceRouteOnReady}//show distance and duration from origin to destination
-      />
-      ) }
-        
-      </MapView>
+     <MapView
+        ref={mapRef}
+        style={styles.map} 
+        provider={PROVIDER_GOOGLE} 
+        initialRegion={INITIAL_POSITION} 
+        >
+          {origin && <Marker coordinate={origin} /> }
+          {destination && <Marker coordinate={destination} />}
+          {showDirections && origin && destination && (
+          <MapViewDirections
+          origin={origin}
+          destination={destination}
+          apikey={GOOGLE_API_KEY}
+          strokeColor="#6cf542"
+          strokeWidth={5}
+          onReady={traceRouteOnReady}//show distance and duration from origin to destination
+        />
+        ) }
+     </MapView>
+
        <View style={styles.searchContainer}>
-        <InputAutocomplete
-        label="Origin"
-        onPlaceSelected={(details) => {
-          onPlaceSelected(details, "origin");
-        } } placeholder={''}         />
-        <InputAutocomplete
-        label="Destination"
-        onPlaceSelected={(details) => {
-          onPlaceSelected(details, "destination");
-        } } placeholder={''}      />
-     <TouchableOpacity style={styles.button} onPress={traceRoute}>
-          <Text style={styles.buttonText}>Trace Route</Text>
-         </TouchableOpacity>
-         {distance && duration ? (
-         <View>
-          <Text>Distance: {distance.toFixed(2)}</Text>
-          <Text>Duration: {Math.ceil(duration)} min</Text>
-         </View>
+
+          <InputAutocomplete
+          label="Origin"
+          onPlaceSelected={(details) => {
+            onPlaceSelected(details, "origin");
+          } } placeholder={''}         />
+          <InputAutocomplete
+          label="Destination"
+          onPlaceSelected={(details) => {
+            onPlaceSelected(details, "destination");
+          } } placeholder={''}      />
+          <TouchableOpacity style={styles.button} onPress={traceRoute}>
+            <Text style={styles.buttonText}>Trace Route</Text>
+          </TouchableOpacity>
+
+
+
+          {distance && duration ? (
+          <View>
+            <Text>Distance: {distance.toFixed(2)}</Text>
+            <Text>Duration: {Math.ceil(duration)} min</Text>
+          </View>
          ): null} 
        </View>
+
+
+
+
     </View>
+
   );
 }
 
@@ -186,7 +212,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   button: {
-    backgroundColor: "#bbb",
+    backgroundColor: "#ccc",
     paddingVertical: 15,
     marginLeft: 45,
     marginRight: 45,
@@ -201,4 +227,33 @@ const styles = StyleSheet.create({
 });
 
  
-// on terminal instal de dependencies: npx expo install react-native-maps
+// ps. on terminal instal de dependencies: npx expo install react-native-maps
+
+
+// example of use of Flatlist:
+
+// const Place = ({place}) => {
+//   return(
+//     <View style={{
+//       padding: 8,
+//     }}>
+//       <Text key={place.id}>{place.name}</Text>
+//       <Button title="Click me" />
+//     </View>
+//   )
+// }
+
+
+
+// <View style={styles.container}>
+// <Text>Select Place</Text>
+// <FlatList
+//   data={places}
+//   renderItem={({ item })=> {
+//     return (
+//       <Place place={item} />
+//     )
+//   }}
+//   KeyExtrator={ e => e.id } />
+//   <StatusBar style="auto" />
+// </View>

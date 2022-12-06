@@ -13,5 +13,5 @@ web-build/
 # macOS
 .DS_Store
 
-# my GOOGLE_API_KEY
+# GOOGLE_API_KEY
 environments
