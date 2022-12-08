@@ -1,6 +1,10 @@
 export const GOOGLE_API_KEY = "AIzaSyCetB4C4MeZQ1zPMDKR1ias4CYTCLhH7HQ";
 
 
+
+
+
+//15 different places types
 export const placeTypes = [{"id":1,"name":"Province","created_at":"2022-03-28T14:09:46.016Z","updated_at":"2022-03-28T14:09:46.016Z"},
 {"id":2,"name":"County","created_at":"2022-03-28T14:09:46.032Z","updated_at":"2022-03-28T14:09:46.032Z"},
 {"id":3,"name":"City","created_at":"2022-03-28T14:09:46.047Z","updated_at":"2022-03-28T14:09:46.047Z"},
