@@ -25,7 +25,9 @@ Requirements Checklist:
  - [ ] Extra features implemented:
  ;
 #### Link to a Screencast Video (YouTube):
+
 #### Report: A short report (300-1000 words) describing the challenges you faced, failed attempts and workarounds used, any helper or alternative libraries you have used, and what you have learned in the process.
+
 #### References: If you have used (in part or fully) any code from the internet (e.g. stackoverflow, github, youtube, blogs).
 Bergmann, F. (2022). Google Maps and Directions API on React Native. YouTube. Available at: https://www.youtube.com/watch?v=Wq3dO05jv6o [Accessed 20 Nov. 2022].
 Expo Documentation. (2022). MapView - Expo Documentation. [online] Available at: https://docs.expo.dev/versions/latest/sdk/map-view/ [Accessed 20 Nov. 2022].
