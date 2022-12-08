@@ -1,10 +1,9 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import MapView, { Callout, LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, Touchable, TouchableOpacity, FlatList, Button, ScrollView } from 'react-native';
 import { GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { GOOGLE_API_KEY, places } from './environments';
-import { placeTypes } from './environments'
+import { GOOGLE_API_KEY } from './environments';
 import Constants from "expo-constants";
 import MapViewDirections from 'react-native-maps-directions';
 import { StatusBar } from 'expo-status-bar';
@@ -67,8 +66,9 @@ export default function App() {
   const [ distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
   const mapRef = useRef<MapView>(null);
-  // const arr: any[] = [];
-  // const [markers, setMarkers] = useState(arr)
+  const arr: any[] = [];
+  const [markers, setMarkers] = useState(arr)
+  const [loading, setLoading] = useState(false)
 
   // to move the camera to place selected
   const moveTo = async(position: LatLng) => {
@@ -115,15 +115,16 @@ const onPlaceSelected = (
     moveTo(position);
 };
 
+useEffect(() => {
 
-
-// loadMarkersLocations()
-
-// function loadMarkersLocations() {
-//     fetch('https://gist.githubusercontent.com/saravanabalagi/541a511eb71c366e0bf3eecbee2dab0a/raw/bb1529d2e5b71fd06760cb030d6e15d6d56c34b3/places.json')
-//         .then(response => response.json())
-//         .then(markersLocation => setMarkers(markersLocation));
-// }
+setLoading(true)
+ //function loadMarkersLocations() {
+     fetch('https://gist.githubusercontent.com/saravanabalagi/541a511eb71c366e0bf3eecbee2dab0a/raw/bb1529d2e5b71fd06760cb030d6e15d6d56c34b3/places.json')
+       .then(response => response.json())
+        .then(markersLocation => setMarkers(markersLocation))
+          .then(() => setLoading(false));
+//}
+},[]);
 
 
 return (
@@ -134,15 +135,19 @@ return (
         provider={PROVIDER_GOOGLE} 
         initialRegion={INITIAL_POSITION} 
         >
-          {/* <>
-        {markers.map((marker, index) => {
+          {/* <> */}
+        {loading ? null : markers.map((marker, index) => {
+                    return(
                     <Marker
                         key={index}
                         coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
                         title={marker.name}
                         pinColor={GetMarkColor(marker.place_type_id)}>
-                    </Marker>
-            })} */}
+                          <Callout>
+	                       <Text>{marker.name}</Text>
+                        </Callout> 
+                    </Marker>)
+            })}
           {origin && <Marker coordinate={origin} /> }
           {destination && <Marker coordinate={destination} />}
           {showDirections && origin && destination && (
@@ -153,14 +158,9 @@ return (
           strokeColor="#0000dd"
           strokeWidth={4}
           onReady={traceRouteOnReady}//show distance and duration from origin to destination
-          
         />
-
-            
-
         )}
-
-{/* </> */}
+    {/* </> */}
      </MapView>
 
        <View style={styles.searchContainer}>
