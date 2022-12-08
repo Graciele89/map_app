@@ -1,16 +1,15 @@
 
 import React, { useRef, useState } from 'react';
-import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text, Touchable, TouchableOpacity, FlatList, Button } from 'react-native';
+import MapView, { Callout, LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { StyleSheet, View, Dimensions, Text, Touchable, TouchableOpacity, FlatList, Button, ScrollView } from 'react-native';
 import { GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { GOOGLE_API_KEY, places } from './environments';
 import { placeTypes } from './environments'
 import Constants from "expo-constants";
-//import { useRef, useState } from "react";
 import MapViewDirections from 'react-native-maps-directions';
 import { StatusBar } from 'expo-status-bar';
-
-
+import Geolocation from '@react-native-community/geolocation';
+import GetMarkColor from './components/Coloring';
 
 // https://docs.expo.dev/versions/latest/sdk/map-view/
 // https://www.npmjs.com/package/react-native-google-places-autocomplete
@@ -18,22 +17,23 @@ import { StatusBar } from 'expo-status-bar';
 
 
 const { width, height } = Dimensions.get("window");
-
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const INITIAL_POSITION = {
-latitude: 53.3498019,           // location where i got the cordinates:
+latitude: 53.3498019,           // location where i got the cordinates from the Spire
 longitude: -6.260254172727272,  // https://www.maps.ie/coordinates.html
 latitudeDelta: LATITUDE_DELTA,
 longitudeDelta: LONGITUDE_DELTA,
 };
+
 
 type InputAutocompleteProps ={
   label: string;
   placeholder: string;
   onPlaceSelected: (details: GooglePlaceDetail | null) => void;
 };
+
 
 function InputAutocomplete({
   label,
@@ -67,6 +67,8 @@ export default function App() {
   const [ distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
   const mapRef = useRef<MapView>(null);
+  // const arr: any[] = [];
+  // const [markers, setMarkers] = useState(arr)
 
   // to move the camera to place selected
   const moveTo = async(position: LatLng) => {
@@ -113,15 +115,14 @@ const onPlaceSelected = (
     moveTo(position);
 };
 
-// const Place = ({place}) => {
-//   return(
-//     <View style={{
-//       padding: 8,
-//     }}>
-//       <Text key={place.id}>{place.name}</Text>
-//       <Button title="Click me" />
-//     </View>
-//   )
+
+
+// loadMarkersLocations()
+
+// function loadMarkersLocations() {
+//     fetch('https://gist.githubusercontent.com/saravanabalagi/541a511eb71c366e0bf3eecbee2dab0a/raw/bb1529d2e5b71fd06760cb030d6e15d6d56c34b3/places.json')
+//         .then(response => response.json())
+//         .then(markersLocation => setMarkers(markersLocation));
 // }
 
 
@@ -133,6 +134,15 @@ return (
         provider={PROVIDER_GOOGLE} 
         initialRegion={INITIAL_POSITION} 
         >
+          {/* <>
+        {markers.map((marker, index) => {
+                    <Marker
+                        key={index}
+                        coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+                        title={marker.name}
+                        pinColor={GetMarkColor(marker.place_type_id)}>
+                    </Marker>
+            })} */}
           {origin && <Marker coordinate={origin} /> }
           {destination && <Marker coordinate={destination} />}
           {showDirections && origin && destination && (
@@ -140,11 +150,17 @@ return (
           origin={origin}
           destination={destination}
           apikey={GOOGLE_API_KEY}
-          strokeColor="#6cf542"
-          strokeWidth={5}
+          strokeColor="#0000dd"
+          strokeWidth={4}
           onReady={traceRouteOnReady}//show distance and duration from origin to destination
+          
         />
-        ) }
+
+            
+
+        )}
+
+{/* </> */}
      </MapView>
 
        <View style={styles.searchContainer}>
@@ -172,9 +188,6 @@ return (
           </View>
          ): null} 
        </View>
-
-
-
 
     </View>
 
@@ -226,8 +239,17 @@ const styles = StyleSheet.create({
 
 });
 
+
+
+
+
  
 // ps. on terminal instal de dependencies: npx expo install react-native-maps
+
+
+
+
+
 
 
 // example of use of Flatlist:
